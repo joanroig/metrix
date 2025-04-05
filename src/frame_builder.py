@@ -4,6 +4,7 @@ import random
 from PIL import Image, ImageDraw, ImageFont
 
 from config import Config
+from file_utils import FileUtils
 from glitch import Glitch
 
 
@@ -50,8 +51,9 @@ class FrameBuilder:
 
     @staticmethod
     def create_typing_frames(text_lines, activity_graphic):
-        font = ImageFont.truetype(Config.FONT_PATH, Config.FONT_SIZE)
-        symbol_font = ImageFont.truetype(Config.SYMBOL_FONT_PATH, Config.FONT_SIZE)
+        font = ImageFont.truetype(FileUtils.resolve_font_path(Config.FONT_PATH), Config.FONT_SIZE)
+        symbol_font = ImageFont.truetype(FileUtils.resolve_font_path(Config.SYMBOL_FONT_PATH), Config.FONT_SIZE)
+
         typed_text = ""
         frame_count = 0
         max_glitches = Config.MAX_GLITCHES

@@ -25,11 +25,11 @@ inputs:
   FONT_PATH:
     description: "Path to the font file"
     required: false
-    default: "metrix/assets/MxPlus_IBM_BIOS.ttf"
+    default: "assets/MxPlus_IBM_BIOS.ttf"
   SYMBOL_FONT_PATH:
     description: "Path to the symbol font file"
     required: false
-    default: "metrix/assets/MxPlus_IBM_BIOS.ttf"
+    default: "assets/MxPlus_IBM_BIOS.ttf"
   # Colors
   TEXT_COLOR:
     description: "Color of the text"
@@ -48,7 +48,7 @@ inputs:
     description: "Text to display"
     required: false
     default: |
-      "{username} GitHub Metrix
+      {username} GitHub Metrix
       ----------------------
 
       Joined GitHub: {created_at}
@@ -58,7 +58,7 @@ inputs:
       Total Commits: {total_commits}
       Total Stars: {total_stars}
 
-      Data updated: {updated_date}"
+      Data updated: {updated_date}
   TYPING_CHARACTER:
     description: "Character used for typing effect"
     required: false
@@ -105,12 +105,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Checkout Metrics Code
-      uses: actions/checkout@v4
-      with:
-        repository: joanroig/metrix
-        path: metrix
-
     - name: Set Up Python
       uses: actions/setup-python@v5
       with:
@@ -123,7 +117,7 @@ runs:
       shell: bash
 
     - name: Install Python Dependencies
-      run: pip install -r metrix/requirements.txt
+      run: pip install -r ${{ github.action_path }}/requirements.txt
       shell: bash
 
     - name: Generate GIF
@@ -148,26 +142,9 @@ runs:
         GLITCHES: ${{ inputs.GLITCHES }}
         MAX_GLITCHES: ${{ inputs.MAX_GLITCHES }}
         GLITCH_PROBABILITY: ${{ inputs.GLITCH_PROBABILITY }}
-      run: python -u metrix/src/main.py
+      run: python -u ${{ github.action_path }}/src/main.py
       shell: bash
 
-    - name: Checkout Executing Repository
-      uses: actions/checkout@v4
-      with:
-        token: ${{ inputs.GITHUB_TOKEN }}
-        path: target
-
-    - name: Move Generated GIF to Executing Repo
-      run: |
-        mv metrix.gif target/
-      shell: bash
-
-    - name: Commit and Push GIF
-      run: |
-        cd target
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add metrix.gif
-        git commit -m "Update GitHub Metrix GIF" || echo "No changes to commit"
-        git push
+    - name: Move image to workspace
+      run: mv ${{ github.action_path }}/metrix.gif ${{ github.workspace }}/metrix.gif
       shell: bash

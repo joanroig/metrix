@@ -12,7 +12,7 @@ class Config:
     VERSION = "2.0"
 
     # Debug Mode
-    DEBUG_MODE = os.getenv("DEBUG_MODE").lower() == "true"
+    DEBUG_MODE = os.getenv("DEBUG_MODE", "false").lower() == "true"
 
     # Authentication
     TOKEN = os.getenv("GITHUB_TOKEN") if not DEBUG_MODE else FileUtils.read_token_from_file()
