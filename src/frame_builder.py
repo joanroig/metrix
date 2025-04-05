@@ -4,6 +4,7 @@ import random
 from PIL import Image, ImageDraw, ImageFont
 
 from config import Config
+from file_utils import FileUtils
 from glitch import Glitch
 
 
@@ -31,6 +32,7 @@ class FrameBuilder:
     @staticmethod
     def create_frames(count, text, activity_graphic, text_font, symbol_font, frame_count):
         for _ in range(count):
+            # TODO: sizes are hardcoded, font changes will break the graphic
             img = Image.new("RGB", (Config.WIDTH, Config.HEIGHT), Config.BACKGROUND_COLOR)
             draw = ImageDraw.Draw(img)
             draw.text((10, 10), text, font=text_font, fill=Config.TEXT_COLOR)
@@ -49,13 +51,14 @@ class FrameBuilder:
 
     @staticmethod
     def create_typing_frames(text_lines, activity_graphic):
-        font = ImageFont.truetype(Config.FONT_PATH, 20)
-        symbol_font = ImageFont.truetype(Config.SYMBOL_FONT_PATH, 20)
+        font = ImageFont.truetype(FileUtils.resolve_font_path(Config.FONT_PATH), Config.FONT_SIZE)
+        symbol_font = ImageFont.truetype(FileUtils.resolve_font_path(Config.SYMBOL_FONT_PATH), Config.FONT_SIZE)
+
         typed_text = ""
         frame_count = 0
-        max_glitches = 4
+        max_glitches = Config.MAX_GLITCHES
         glitches = []
-        glitch_probability = 0.03  # 3% chance of glitch in each frame
+        glitch_probability = Config.GLITCH_PROBABILITY
 
         text = "\n".join(text_lines)
 
@@ -66,12 +69,12 @@ class FrameBuilder:
                 typed_text = FrameBuilder.apply_glitch(typed_text, frame_count, glitches, glitch_probability, max_glitches)
                 typed_text = FrameBuilder.restore_glitches(typed_text, frame_count, glitches)
 
-            frame_count = FrameBuilder.create_frames(1, typed_text + "█", activity_graphic, font, symbol_font, frame_count)
+            frame_count = FrameBuilder.create_frames(1, typed_text + Config.TYPING_CHARACTER, activity_graphic, font, symbol_font, frame_count)
 
         for _ in range(6):
             if Config.GLITCHES:
                 typed_text = FrameBuilder.restore_glitches(typed_text, frame_count, glitches)
-            frame_count = FrameBuilder.create_frames(20, typed_text + "█", activity_graphic, font, symbol_font, frame_count)
+            frame_count = FrameBuilder.create_frames(20, typed_text + Config.TYPING_CHARACTER, activity_graphic, font, symbol_font, frame_count)
             frame_count = FrameBuilder.create_frames(20, typed_text, activity_graphic, font, symbol_font, frame_count)
 
         return frame_count

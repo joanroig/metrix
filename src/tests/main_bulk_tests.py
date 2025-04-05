@@ -11,7 +11,6 @@ from gif_builder import GifBuilder
 from github_api import GitHubAPI
 from text_builder import TextBuilder
 
-
 if __name__ == "__main__":
     logger.info("Starting...")
     try:
@@ -23,8 +22,8 @@ if __name__ == "__main__":
             # restore original values on each iteration
             Config.TEXT_COLOR, Config.BACKGROUND_COLOR, Config.METHOD, Config.CONTRAST = ColorUtils.resolve_colors(text_color, background_color, Config.MINIMUM_CONTRAST)
             # Check if the file already exists
-            # filename = f"bulk/{Config.OUTPUT_GIF}_{Config.BACKGROUND_COLOR}_{Config.TEXT_COLOR}_{Config.CONTRAST}_{Config.METHOD}.gif"
-            filename = f"bulk/{Config.OUTPUT_GIF}_{Config.BACKGROUND_COLOR}_{Config.TEXT_COLOR}.gif"
+            # filename = f"bulk/{Config.OUTPUT_GIF_NAME}_{Config.BACKGROUND_COLOR}_{Config.TEXT_COLOR}_{Config.CONTRAST}_{Config.METHOD}.gif"
+            filename = f"bulk/{Config.OUTPUT_GIF_NAME}_{Config.BACKGROUND_COLOR}_{Config.TEXT_COLOR}.gif"
             if os.path.exists(filename):
                 logger.warning(f"File already exists: {filename}, skipping generation.")
                 continue
