@@ -77,7 +77,7 @@ Follow these steps to integrate Metrix into your GitHub profile:
 1.  **Create a New Repository**  
     Create a new repository to host your profile README. For guidance, refer to GitHub's documentation on [setting up and managing your profile README](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/customizing-your-profile/managing-your-profile-readme).
 
-2.  **(Optional) Generate and Add a Personal Access Token (PAT)**  
+2.  **(Optional) Generate and Add a Personal Access Token (classic / PAT)**  
     By default, the action will only display public data. To also include private repository data, follow these steps:
 
     1. Create a PAT token from [GitHub's Token Settings](https://github.com/settings/tokens) with the following permissions:
@@ -86,7 +86,7 @@ Follow these steps to integrate Metrix into your GitHub profile:
        - **read:org**: Read org and team membership, and org projects
        - **read:user**: Read all user profile data
 
-    2. In your repository, navigate to **Settings > Secrets and variables** and add a new secret:
+    2. In your repository, navigate to **Settings > Secrets and variables** and add a new repository-secret:
 
        - Name the secret `PAT_TOKEN`
        - Paste the PAT token value generated in the previous step
@@ -131,6 +131,8 @@ Follow these steps to integrate Metrix into your GitHub profile:
     jobs:
       generate:
         runs-on: ubuntu-latest
+        permissions:
+          contents: write
         steps:
           - name: Checkout Repository
             uses: actions/checkout@v4
